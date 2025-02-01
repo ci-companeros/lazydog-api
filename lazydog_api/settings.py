@@ -43,7 +43,7 @@ REST_FRAMEWORK = {
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(00^=rox4bo)d#b8rhrxyvtk4#agcu(%1d5+p$(k7t@(5ygibj'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

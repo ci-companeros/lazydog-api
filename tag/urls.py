@@ -7,7 +7,7 @@ from .views import TagViewSet
 This file defines the available API endpoints for the Tag model.
 """
 
-# Using Django REST Framework's router to automatically generate URL patterns
+# DRF router automatically generates CRUD API endpoints for the Tag model
 router = DefaultRouter()
 router.register(r'tags', TagViewSet)
 

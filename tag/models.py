@@ -4,11 +4,8 @@ from django.utils.text import slugify
 
 class Tag(models.Model):
     """
-    Represents a tag that can be used to categorize resources
-    Tags provide a way to add additional metadata to resources,
-    allowing for greater flexibility in resource categorization.
-    Tags can be associated with many resources, enabling users to find
-    content based on specific keywords.
+    Represents a tag used for categorizing resources.
+    Tags provide additional metadata, making resources easier to find.
     """
     tag_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
@@ -19,8 +16,7 @@ class Tag(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Automatically generates a unique slug from the name.
-        If a duplicate slug exists, appends a number to make it unique.
+        Generates a unique slug from the name, appending a number if necessary.
         """
         if not self.slug:
             base_slug = slugify(self.name)

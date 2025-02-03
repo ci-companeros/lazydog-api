@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Tag
 
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """
@@ -9,13 +10,19 @@ class TagAdmin(admin.ModelAdmin):
      - Allows filtering tags by creation/update date.
      - Enables a date-based filtering.
      - Ensures consistent ordering
-     - Prevents accidental edits to timestamps.    
+     - Prevents accidental edits to timestamps.
     """
-    list_display = ('tag_id', 'name', 'description', 'created_at', 'updated_at')
+    list_display = (
+        'tag_id',
+        'name',
+        'description',
+        'created_at',
+        'updated_at'
+    )
     search_fields = ('name',)
     list_filter = ('created_at', 'updated_at')
     date_hierarchy = 'created_at'
     ordering = ('created_at', 'updated_at')
     readonly_fields = ('created_at', 'updated_at')
-    
+
 # Register your models here.

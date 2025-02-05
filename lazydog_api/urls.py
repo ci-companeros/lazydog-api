@@ -39,5 +39,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     path('resources/', include('resource_item.urls')),
-    path('category/', include('category.urls'))
+    path('categories/', include('category.urls'))
 ]

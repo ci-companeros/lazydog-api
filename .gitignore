@@ -212,3 +212,11 @@ node_modules/
 
 # Cloudinary API config file (might contain sensitive data like API keys)
 cloudinary_python.txt
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windsurf IDE
+.windsurf/

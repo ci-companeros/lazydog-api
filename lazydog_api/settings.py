@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     'resource_item',
     'category',
+    'tag'
 ]
 
 MIDDLEWARE = [

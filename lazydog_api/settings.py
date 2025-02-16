@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import dj_database_url
 
+import category
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -65,6 +67,8 @@ INSTALLED_APPS = [
     'django_filters',
 
     'resource_item',
+    'category',
+    'tag',
 ]
 
 MIDDLEWARE = [
@@ -110,7 +114,7 @@ if 'DEV' in os.environ:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
     }
 
 

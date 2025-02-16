@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import
+from .views import CommentViewSet
 
 
 """
@@ -9,7 +9,7 @@ Provides standard CRUD operations through DRF's DefaultRouter.
 """
 
 router = DefaultRouter()
-router.register(r'', )
+router.register(r'', CommentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

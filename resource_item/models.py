@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from category.models import Category
+from tag.models import Tag
 
 # Create your models here.
 
@@ -21,8 +22,9 @@ class ResourceItem(models.Model):
         related_name="created_by"
     )
     url = models.URLField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True,  db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="resources") 
 
     def __str__(self):
         return self.title

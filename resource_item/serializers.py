@@ -19,18 +19,25 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         model = ResourceItem
         fields = ['id', 'title', 'description',
                   'category', 'user', 'url', 'created_at', 'updated_at']
+        read_only_fields = ['user', 'created_at', 'updated_at']
 
     def validate_title(self, value):
         """
-        Validate the title field to ensure uniqueness,
-        except for the current instance.
+        Ensure that title is unique per user.
         """
-        instance = getattr(self, "instance", None)
+        user = self.context['request'].user 
 
-        # Check if the title is unique, except for the current instance
-        if instance is None or instance.title != value:
-            if ResourceItem.objects.filter(title=value).exists():
-                raise serializers.ValidationError(
-                    "An item with this title already exists.")
+        # Check if the title already exists for this user
+        if ResourceItem.objects.filter(title=value, user=user).exists():
+            raise serializers.ValidationError(
+                "You already have a resource with this title."
+            )
 
         return value
+
+    def create(self, validated_data):
+        """
+        Set the user to the authenticated user when creating a ResourceItem.
+        """
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)

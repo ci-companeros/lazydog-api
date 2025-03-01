@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import ResourceItem
 from category.models import Category
+import validators
 
 
 class ResourceItemSerializer(serializers.ModelSerializer):
@@ -25,12 +26,38 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         """
         Ensure that title is unique per user.
         """
-        user = self.context['request'].user 
-
+        user = self.context['request'].user
         # Check if the title already exists for this user
         if ResourceItem.objects.filter(title=value, user=user).exists():
             raise serializers.ValidationError(
                 "You already have a resource with this title."
+            )
+
+        return value
+
+    def validate_url(self, value):
+        """
+        Ensure the provided URL is valid.
+        """
+        if not validators.url(value):
+            raise serializers.ValidationError("Enter a valid URL.")
+        return value
+
+    def validate_description(self, value):
+        """
+        Ensure the description has a reasonable length.
+        """
+        min_length = 10
+        max_length = 500
+
+        if len(value) < min_length:
+            raise serializers.ValidationError(
+                f"Description must be at least {min_length} characters long."
+            )
+
+        if len(value) > max_length:
+            raise serializers.ValidationError(
+                f"Description cannot exceed {max_length} characters."
             )
 
         return value

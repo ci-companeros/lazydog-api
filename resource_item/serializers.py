@@ -1,11 +1,16 @@
 from rest_framework import serializers
 from .models import ResourceItem
+from category.models import Category
 
 
 class ResourceItemSerializer(serializers.ModelSerializer):
     """
     Serializer for the ResourceItem model.
     """
+
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+    )
 
     class Meta:
         """

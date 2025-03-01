@@ -11,7 +11,9 @@ class ResourceItem(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name="resource_items"
+        related_name="resource_items",
+        null=True,
+        blank=True
     )
     user = models.ForeignKey(
         User,

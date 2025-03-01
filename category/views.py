@@ -1,24 +1,26 @@
 from rest_framework import viewsets, permissions, filters
 from .models import Category
 from .serializers import CategorySerializer
-from .permissions import IsOwnerOrReadOnly  # 👈 Lägg till denna import
+from .permissions import AdminOnly  # Importera din custom permission
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
-    This viewset provides `list`, `create`, `retrieve`,
-    `update`, and `destroy` actions for the Category model.
+    This viewset allows only admin users to create, update, 
+    and delete categories.
+    All users can list and retrieve categories.
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['created_at', 'name']
     search_fields = ['name', 'description']
 
-    def perform_create(self, serializer):
+    def get_permissions(self):
         """
-        Set the user to the authenticated user when creating a category.
+        Allow read-only access for all users, 
+        but restrict modifications to admins.
         """
-        serializer.save(user=self.request.user)
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [AdminOnly()]

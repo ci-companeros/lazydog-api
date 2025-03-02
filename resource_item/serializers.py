@@ -8,9 +8,10 @@ class ResourceItemSerializer(serializers.ModelSerializer):
     """
     Serializer for the ResourceItem model.
     """
-
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
+        required=False,
+        allow_null=True
     )
 
     class Meta:

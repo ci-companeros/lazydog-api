@@ -9,9 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'description', 'user',
-                  'created_at', 'updated_at']
-        read_only_fields = ['user']
+        fields = ['id', 'name', 'description', 'created_at', 'updated_at']
 
     def validate_name(self, value):
         """
@@ -26,10 +24,3 @@ class CategorySerializer(serializers.ModelSerializer):
                 )
 
         return value
-
-    def create(self, validated_data):
-        """
-        Set the user to the authenticated user when creating a category.
-        """
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)

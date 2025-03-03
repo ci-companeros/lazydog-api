@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     'resource_item',
+    'comment',
     'category',
     'tag',
 ]
@@ -99,14 +100,14 @@ WSGI_APPLICATION = 'lazydog_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DEV' in os.environ:
+if os.environ.get("DEVELOPMENT") == "True":  # Use SQLite in dev
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
+else:  # Use PostgreSQL in production
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
     }

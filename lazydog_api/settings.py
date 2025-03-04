@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'resource_item',
     'comment',
     'category',
+    'flag',
     'tag',
 ]
 

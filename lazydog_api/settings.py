@@ -44,7 +44,7 @@ REST_FRAMEWORK = {
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 
 # Application definition
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'resource_item',
     'category',
     'tag',
+    'comment'
 ]
 
 MIDDLEWARE = [
@@ -99,7 +100,7 @@ WSGI_APPLICATION = 'lazydog_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DEV' in os.environ:
+if os.environ.get("DEV") == "True":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

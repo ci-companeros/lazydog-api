@@ -9,7 +9,7 @@ This file defines the available API endpoints for the Tag model.
 
 # DRF router automatically generates CRUD API endpoints for the Tag model
 router = DefaultRouter()
-router.register(r'tags', TagViewSet)
+router.register(r'', TagViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

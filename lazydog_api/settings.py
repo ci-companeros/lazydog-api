@@ -105,7 +105,8 @@ WSGI_APPLICATION = 'lazydog_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if os.environ.get("DEV_DB"):  # Use SQLite in dev
+if os.environ.get("DEV_DB", "True").lower() == "true":
+  # Use SQLite in dev
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

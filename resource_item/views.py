@@ -15,9 +15,10 @@ class ResourceItemViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceItemSerializer
     queryset = ResourceItem.objects.all()
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-    
+
     # Enable filtering, searching and ordering
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter,
+                       filters.SearchFilter]
     filterset_fields = ['category', 'tags']
     ordering_fields = ['created_at', 'title']
     search_fields = ['title', 'description']

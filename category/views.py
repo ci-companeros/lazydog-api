@@ -6,7 +6,7 @@ from .permissions import AdminOnly  # Importera din custom permission
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
-    This viewset allows only admin users to create, update, 
+    This viewset allows only admin users to create, update,
     and delete categories.
     All users can list and retrieve categories.
     """
@@ -18,7 +18,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Allow read-only access for all users, 
+        Allow read-only access for all users,
         but restrict modifications to admins.
         """
         if self.action in ['list', 'retrieve']:

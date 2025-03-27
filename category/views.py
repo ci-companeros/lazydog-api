@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, filters
 from .models import Category
 from .serializers import CategorySerializer
-from .permissions import AdminOnly  # Importera din custom permission
+from .permissions import AdminOnly
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

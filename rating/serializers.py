@@ -6,12 +6,13 @@ from .models import Rating
 class RatingSerializer(serializers.ModelSerializer):
     """
     Serializer for the Rating model.
-    Handles validation of ratings and ensures users can only rate once per resource.
+    Handles validation of ratings and ensures
+    users can only rate once per resource.
     """
     class Meta:
         model = Rating
         fields = ['id', 'user', 'resource_item', 'score',
-                 'created_at', 'updated_at']
+                  'created_at', 'updated_at']
         read_only_fields = ['user', 'created_at', 'updated_at']
 
     def validate_score(self, value):
@@ -21,19 +22,28 @@ class RatingSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        """Validate that user hasn't already rated this resource"""
+        """Validate that user hasn't already rated
+        this resource and doesn't own it"""
         user = self.context['request'].user
         resource_item = data.get('resource_item')
 
-        # Check if user already rated this resource
-        if self.instance is None:  # Only check on create
+        # Check that resource_item is provided
+        if not resource_item:
+            raise ValidationError('Resource item is required.')
+
+        # ⛔ Prevent user from rating their own resource
+        if resource_item.user == user:
+            raise ValidationError('You cannot rate your own resource item.')
+
+        # ✅ Check for existing rating
+        if self.instance is None:
             existing_rating = Rating.objects.filter(
                 user=user,
                 resource_item=resource_item
             ).exists()
             if existing_rating:
                 raise ValidationError(
-                    'You have already rated this resource item')
+                    'You have already rated this resource item.')
 
         return data
 

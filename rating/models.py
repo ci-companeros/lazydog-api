@@ -39,4 +39,7 @@ class Rating(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.user.username} rated {self.resource_item} with {self.get_score_display()}'
+        return (
+            f'{self.user.username} rated '
+            f'{self.resource_item} with {self.get_score_display()}'
+        )

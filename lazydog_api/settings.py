@@ -29,13 +29,17 @@ if os.path.exists('env.py'):
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEVELOPMENT") == "True"
+DEBUG = os.environ.get("DEBUG")
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
+    ],
+    
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ]
 }
 
@@ -61,7 +65,9 @@ INSTALLED_APPS = [
     'django_filters',
 
     'resource_item',
+    'comment',
     'category',
+    'flag',
     'tag',
     'comment'
 ]
@@ -107,7 +113,7 @@ if os.environ.get("DEV") == "True":
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
+else:  # Use PostgreSQL in production
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
     }

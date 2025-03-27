@@ -5,6 +5,7 @@ from .models import Tag
 class TagSerializer(serializers.ModelSerializer):
     """
     Converts Tag model instances to JSON format for API responses.
+    Ensures users can only use existing tags.
     """
     class Meta:
         model = Tag
@@ -16,14 +17,3 @@ class TagSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
-
-    def validate_name(self, value):
-        """
-        EValidates uniqueness of the tag name.
-        Prevents duplicate tags from being created.
-        """
-        if Tag.objects.filter(name=value).exists():
-            raise serializers.ValidationError(
-                "A tag with this name already exists."
-            )
-        return value

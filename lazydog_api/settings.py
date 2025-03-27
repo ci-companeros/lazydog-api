@@ -69,7 +69,8 @@ INSTALLED_APPS = [
     'category',
     'flag',
     'tag',
-    
+    'rating'
+
 ]
 
 MIDDLEWARE = [

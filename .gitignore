@@ -223,3 +223,6 @@ cloudinary_python.txt
 
 # Bash alias files
 *.bash
+
+# VS Code settings
+.vscode/

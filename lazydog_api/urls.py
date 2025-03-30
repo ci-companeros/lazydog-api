@@ -39,6 +39,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('categories/', include('category.urls')),
     path('comments/', include('comment.urls')),
+    path('ratings/', include('rating.urls')),
     path('resources/', include('resource_item.urls')),
     path('tags/', include('tag.urls')),
 ]

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import ResourceItem
 from category.models import Category
 import validators
-from tag.models import Tag 
+from tag.models import Tag
 
 
 class ResourceItemSerializer(serializers.ModelSerializer):
@@ -14,12 +14,12 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
-    
+
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True,  # Allow multiple predefined tags
         required=False
-    )  
+    )
 
     class Meta:
         """
@@ -27,7 +27,8 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         """
         model = ResourceItem
         fields = ['id', 'title', 'description',
-                  'category', 'tags', 'user', 'url', 'created_at', 'updated_at']
+                  'category', 'tags', 'user', 'url',
+                  'created_at', 'updated_at']
         read_only_fields = ['user', 'created_at', 'updated_at']
 
     def validate_title(self, value):
@@ -75,7 +76,8 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         Set the user to the authenticated user when creating a ResourceItem
         and handle tag assignment correctly.
         """
-        tags = validated_data.pop('tags', [])  # Extract tags before creating the resource
+        tags = validated_data.pop('tags', [])
+        # Extract tags before creating the resource
         validated_data['user'] = self.context['request'].user
         resource_item = super().create(validated_data)  # Create the resource
         resource_item.tags.set(tags)  # Assign predefined tags to the resource

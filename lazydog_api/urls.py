@@ -42,4 +42,5 @@ urlpatterns = [
     path('ratings/', include('rating.urls')),
     path('resources/', include('resource_item.urls')),
     path('tags/', include('tag.urls')),
+    path('bookmark/', include('bookmark.urls')),
 ]

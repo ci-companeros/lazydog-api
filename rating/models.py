@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from resource_item.models import ResourceItem
+from django.core.exceptions import ValidationError
 
 
 class Rating(models.Model):
@@ -16,11 +17,12 @@ class Rating(models.Model):
         (5, '5 stars'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
     resource_item = models.ForeignKey(
         ResourceItem,
         on_delete=models.CASCADE,
-        related_name='ratings'
+        related_name='ratings',
+        db_index=True¢
     )
     score = models.IntegerField(
         choices=SCORE_CHOICES,
@@ -37,6 +39,10 @@ class Rating(models.Model):
             )
         ]
         ordering = ['-created_at']
+
+    def clean(self):
+        if not (1 <= self.score <= 5):
+            raise ValidationError('Score must be between 1 and 5.')
 
     def __str__(self):
         return (

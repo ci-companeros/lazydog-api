@@ -24,7 +24,7 @@ class Rating(models.Model):
         related_name='ratings',
         db_index=True¢
     )
-    score = models.IntegerField(
+    score = models.PositiveSmallIntegerField(
         choices=SCORE_CHOICES,
         default=1
     )
@@ -32,6 +32,8 @@ class Rating(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = 'Rating'
+        verbose_name_plural = 'Ratings'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'resource_item'],
@@ -43,6 +45,10 @@ class Rating(models.Model):
     def clean(self):
         if not (1 <= self.score <= 5):
             raise ValidationError('Score must be between 1 and 5.')
+
+    def get_score_display(self):
+        """Return the display value for the score."""
+        return dict(self.SCORE_CHOICES).get(self.score, 'Unknown score')
 
     def __str__(self):
         return (

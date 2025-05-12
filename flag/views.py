@@ -8,7 +8,7 @@ from .permissions import IsAdminOrOwner
 
 class FlagViewSet(viewsets.ModelViewSet):
     queryset = Flag.objects.all()
-    serializers_class = FlagSerializer
+    serializer_class = FlagSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsAdminOrOwner,
@@ -18,10 +18,10 @@ class FlagViewSet(viewsets.ModelViewSet):
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_fields = ['resource_item', 'user', 'comment', 'status']
+    filterset_fields = ['user','resource', 'comment', 'status']
     search_fields = ['reason']
     ordering_fields = ['created_at', 'status']
-    ordering = ['_created_at']
+    ordering = ['-created_at']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

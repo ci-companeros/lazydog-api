@@ -22,7 +22,7 @@ class Rating(models.Model):
         ResourceItem,
         on_delete=models.CASCADE,
         related_name='ratings',
-        db_index=True¢
+        db_index=True
     )
     score = models.PositiveSmallIntegerField(
         choices=SCORE_CHOICES,

@@ -40,6 +40,8 @@ urlpatterns = [
     path('categories/', include('category.urls')),
     path('comments/', include('comment.urls')),
     path('flags/', include('flag.urls')),
+    path('ratings/', include('rating.urls')),
     path('resources/', include('resource_item.urls')),
     path('tags/', include('tag.urls')),
+    path('bookmark/', include('bookmark.urls')),
 ]

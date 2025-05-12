@@ -19,7 +19,7 @@ class ResourceItem(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="created_by"
+        related_name="resources"
     )
     url = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

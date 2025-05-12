@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from resource_item.models import ResourceItem
 from django.core.exceptions import ValidationError
 
+
 class Rating(models.Model):
     """Rating model for resource items.
     Each user can only give one rating per resource item.

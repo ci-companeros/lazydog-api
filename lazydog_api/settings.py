@@ -29,7 +29,7 @@ if os.path.exists('env.py'):
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", False)
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -108,7 +108,7 @@ WSGI_APPLICATION = 'lazydog_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if os.environ.get("DEV_DB") == "True":
+if os.environ.get("DEV_DB"):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -117,7 +117,7 @@ if os.environ.get("DEV_DB") == "True":
     }
 else:  # Use PostgreSQL in production
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 
 

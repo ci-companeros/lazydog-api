@@ -1,11 +1,6 @@
-# Comment model for resource_item app
-# Each comment is associated with a resource item,
-# and each resource item can have multiple comments.
 from django.contrib.auth.models import User
 from django.db import models
 from resource_item.models import ResourceItem
-
-# Create your models here.
 
 
 class Comment(models.Model):

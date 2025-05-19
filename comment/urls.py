@@ -9,7 +9,8 @@ Provides standard CRUD operations through DRF's DefaultRouter.
 """
 
 router = DefaultRouter()
-router.register(r'', CommentViewSet)
+router.register(r'', CommentViewSet, basename='comment')
+
 
 urlpatterns = [
     path('', include(router.urls)),

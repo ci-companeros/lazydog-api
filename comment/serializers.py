@@ -18,18 +18,20 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Validate the comment data.
-        Ensures resource item exists.
+        Perform object-level validation for Comment updates.
+
+        Prevents modification of the 'user' and 'resource_item' fields after creation
+        by raising a ValidationError if either field is present in the update request.
+        Allows normal validation during creation.
         """
-        resource_item = data.get('resource_item')
-
-        # Check that resource_item is provided
-        if not resource_item:
-            raise serializers.ValidationError('Resource item is required.')
-
+        if self.instance:
+            if 'user' in self.initial_data:
+                raise serializers.ValidationError('User cannot be modified.')
+            if 'resource_item' in self.initial_data:
+                raise serializers.ValidationError('Resource item cannot be modified.')
         return data
 
     def create(self, validated_data):
-        """Create a new comment, setting the user from the request"""
+        """Set the user from the request when creating a new comment."""
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)

@@ -30,6 +30,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     search_fields = ['content', 'resource_item__title']
     ordering_fields = ['created_at']
     ordering = ['-created_at']
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)

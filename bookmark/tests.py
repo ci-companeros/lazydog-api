@@ -9,7 +9,7 @@ from bookmark.models import Bookmark
 class BookmarkAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        """Create test users, resource, and samplae bookmark"""
+        """Create test users, resource, and sample bookmark"""
         cls.user_1 = User.objects.create_user(username="testuser1", password="testpassword")
         cls.user_2 = User.objects.create_user(username="testuser2", password="testpassword")
         cls.resource = ResourceItem.objects.create(

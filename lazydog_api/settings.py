@@ -108,11 +108,18 @@ WSGI_APPLICATION = 'lazydog_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if os.environ.get("DEV_DB"):
+if os.environ.get("DEV_DB"): # Use SQLite for development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+elif os.getenv("GITHUB_WORKFLOW"):  # Detect if running in GitHub Actions
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
         }
     }
 else:  # Use PostgreSQL in production

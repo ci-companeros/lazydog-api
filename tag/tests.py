@@ -109,11 +109,12 @@ class TagAPITestCase(APITestCase):
         response = self.client.get(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test Tag")
-    
+
     def test_retrieve_tag_unauthenticated(self):
         """
         Ensure unauthenticated users can retrieve a specific tag.
-        Tests GET /tags/<id>/ without login and expects correct tag data returned.
+        Tests GET /tags/<id>/ without login and expects correct tag
+        data returned.
         """
         response = self.client.get(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

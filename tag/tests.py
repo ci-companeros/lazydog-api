@@ -79,7 +79,24 @@ class TagAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.data["slug"].startswith("my-supercalifragilisticexpialidocious-tag"))
     # READ
-
+    def test_list_tags(self):
+        """
+        Ensure tags can be listed without authentication.
+        Tests GET /tags/ and expects HTTP 200 OK and at least one result.    
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreaterEqual(len(response.data), 1)
+    
+    def test_retrieve_tag(self):
+        """
+        Ensure a specific tag can be retrieved by a logged-in user.
+        Tests GET /tags/<id>/ and expects correct tag data returned.
+        """
+        self.client.login(username="adminuser", password="adminpassword")
+        response = self.client.get(self.url_detail)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "python")
     # UPDATE
 
     # DELETE

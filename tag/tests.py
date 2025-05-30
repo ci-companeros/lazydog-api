@@ -96,7 +96,24 @@ class TagAPITestCase(APITestCase):
         self.client.login(username="adminuser", password="adminpassword")
         response = self.client.get(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["name"], "python")
+        self.assertEqual(response.data["name"], "Test Tag")
     # UPDATE
-
+    def test_update_tag_as_admin(self):
+        """
+        Ensure a tag can be updated by an admin.
+        Tests PATCH /tags/<id>/ and expects updated name in response.
+        """
+        self.client.login(username="adminuser", password="adminpassword")
+        response = self.client.patch(self.url_detail, {"name": "Updated Tag"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Updated Tag")
+    
+    def test_update_tag_as_non_admin_forbidden(self):
+        """
+        Ensure regular users cannot update tags.
+        Tests PATCH /tags/<id>/ as is_staff=False and expects HTTP 403 Forbidden.
+        """ 
+        self.client.login(username="testuser1", password="testpassword1")
+        response = self.client.patch(self.url_detail, {"name": "Unauthorized Update"})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)   
     # DELETE

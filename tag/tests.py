@@ -1,20 +1,20 @@
 """
-Unit tests for the Tag API enpoints.
+Unit tests for the Tag API endpoints.
 
 This test suite verifies the full CRUD behaviour of the Tag model under
-different user roles using Djange REST Framework and APITestCase. Each test
+different user roles using Django REST Framework and APITestCase. Each test
 targets one of the following access levels:
 
 Recommended test user structure:
 - Regular user (is_staff=False)
     - Used to validate that POST, PATCH & DELETE actions ar blocked
     - Test users; user1, user 2
-- Unauthentcated user
-    - Used to validate thet POST is forbidden and GET is allowed
+- Unauthenticated user
+    - Used to validate that POST is forbidden and GET is allowed
     - No login used
 - Admin user (is_staff=True)
     - Has full access to  all CRUD operations
-    - Tst user: admin_user
+    - Test user: admin_user
 """
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -48,7 +48,7 @@ class TagAPITestCase(APITestCase):
         cls.url_detail = reverse("tag-detail", args=[cls.tag.tag_id])
 
     # CREATE
-    def test_create_tag_authenticated_asmin(self):
+    def test_create_tag_authenticated_admin(self):
         """
         Ensure an admin user can successfully create a tag.
         Tests POST /tags/ with valid data and expects HTTP 201 Created.
@@ -63,8 +63,8 @@ class TagAPITestCase(APITestCase):
         Ensure unauthenticated users cannot create tags.
         Tests POST /tags/ without login and expects HTTP 403 Forbidden.
         """
-        respons = self.client.post(self.url, {"name": "unauth"})
-        self.assertEqual(respons.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.post(self.url, {"name": "unauth"})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_tag_as_regular_user_forbidden(self):
         """
@@ -106,6 +106,15 @@ class TagAPITestCase(APITestCase):
         Tests GET /tags/<id>/ and expects correct tag data returned.
         """
         self.client.login(username="adminuser", password="adminpassword")
+        response = self.client.get(self.url_detail)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Test Tag")
+    
+    def test_retrieve_tag_unauthenticated(self):
+        """
+        Ensure unauthenticated users can retrieve a specific tag.
+        Tests GET /tags/<id>/ without login and expects correct tag data returned.
+        """
         response = self.client.get(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test Tag")

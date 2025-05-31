@@ -42,10 +42,11 @@ class TagModelTestCase(TestCase):
         still append a suffix for robustness in case slug clashes occur through
         manual overrides or future relaxations.
         """
-        Tag.objects.create(name="Duplicate Tag")
-        with self.assertRaises(Exception):
-            Tag.objects.create(name="Duplicate Tag")
-
+        tag1 = Tag.objects.create(name="Duplicate Tag")
+        tag2 = Tag.objects.create(name="Duplicate Tag")
+        self.assertNotEqual(tag1.slug, tag2.slug)
+        self.assertTrue(tag2.slug.startswith("duplicate-tag"))
+        self.assertRegex(tag2.slug, r"^duplicate-tag-\d+$")
     def test_tag_name_must_be_unique(self):
         """
         Test that the name field enforces uniqueness.

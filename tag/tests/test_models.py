@@ -31,7 +31,7 @@ class TagModelTestCase(TestCase):
         Expected: slug field starts with a slugified version of the name.
         """
         tag = Tag.objects.create(name="Lazy Tag")
-        self.assertTrue(tag.slug, "lazy-tag")
+        self.assertEqual(tag.slug, "lazy-tag")
 
     def test_slug_uniqueness_when_name_causes_slug_collision(self):
         """

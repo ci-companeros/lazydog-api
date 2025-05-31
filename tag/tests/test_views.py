@@ -7,7 +7,7 @@ targets one of the following access levels:
 
 Recommended test user structure:
 - Regular user (is_staff=False)
-    - Used to validate that POST, PATCH & DELETE actions ar blocked
+    - Used to validate that POST, PATCH & DELETE actions are blocked
     - Test users; user1, user 2
 - Unauthenticated user
     - Used to validate that POST is forbidden and GET is allowed

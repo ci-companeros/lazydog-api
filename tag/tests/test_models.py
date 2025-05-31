@@ -13,6 +13,7 @@ Focus areas:
 """
 from django.test import TestCase
 from tag.models import Tag
+from django.db import IntegrityError
 
 
 class TagModelTestCase(TestCase):
@@ -57,5 +58,5 @@ class TagModelTestCase(TestCase):
         clarity in tag-based filtering and lookup.
         """
         Tag.objects.create(name="Unique")
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             Tag.objects.create(name="Unique")

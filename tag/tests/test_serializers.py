@@ -51,8 +51,8 @@ class TagSerializerTestCase(APITestCase):
         Test that serializer validates name uniqueness.
         Expected: Second tag with same name is rejected as invalid.
 
-        Serializer should mirror model-level uniqueness logic to prevent
-        early
+        WHY: Serializer should mirror model-level uniqueness logic to prevent
+        early violations or conflicting entries at the API level.
         """
         Tag.objects.create(name="Unique")
         serializer = TagSerializer(data={"name": "Unique"})

@@ -33,18 +33,20 @@ class TagModelTestCase(TestCase):
         tag = Tag.objects.create(name="Lazy Tag")
         self.assertTrue(tag.slug, "lazy-tag")
 
-    def test_slug_uniqueness(self):
+    def test_slug_uniqueness_when_name_causes_slug_collision(self):
         """
-        Test that slugs are unique even for tags with the same name.
-        Expected: second tag with duplicate name gets a suffixed slug.
+        Test that auto-generated slugs are unique even if names lead
+        to the same slug.
 
-        WHY: Although 'name' must be unique, slug generation logic should
-        still append a suffix for robustness in case slug clashes occur through
-        manual overrides or future relaxations.
+        WHY: Two distinct names may result in the same slug base after
+        slugify(). The system must resolve this by appending suffixes to
+        ensure uniqueness.
         """
-        Tag.objects.create(name="Duplicate Tag")
-        with self.assertRaises(Exception):
-            Tag.objects.create(name="Duplicate Tag")
+        tag1 = Tag.objects.create(name="Python Tips")
+        tag2 = Tag.objects.create(name="Python-Tips")
+
+        self.assertNotEqual(tag1.slug, tag2.slug)
+        self.assertTrue(tag2.slug.startswith("python-tips"))
 
     def test_tag_name_must_be_unique(self):
         """

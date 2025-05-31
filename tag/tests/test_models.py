@@ -6,7 +6,7 @@ including default values, uniqueness constraints, slug generation, and field
 attributes.
 
 Focus areas:
-- Field definitions and defaults (e.g. description, slug)
+- Field definitions and defaults
 - Auto-generated fields and timestamps
 - Slug uniqueness logic
 - __str__ method output

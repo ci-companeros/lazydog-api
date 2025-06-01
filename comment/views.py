@@ -1,8 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, filters
 from .models import Comment
 from .serializers import CommentSerializer
-from .permissions import IsOwnerOrReadOnly
+from lazydog_api.permissions import IsOwnerOrReadOnly
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -17,10 +17,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly
-    ]
+    permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,

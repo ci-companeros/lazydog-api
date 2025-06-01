@@ -61,18 +61,21 @@ jobs:
     - name: Generate Pylint Summary
       id: pylint-summary
       run: |
-        summary="### 🐍 Pylint Scores by Python Version\n\n"
+        artifact_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
+        echo "summary<<EOF" >> $GITHUB_OUTPUT
+        echo "### 🐍 Pylint Scores by Python Version" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+    
         for file in reports/pylint_output_*.txt; do
           version=$(echo "$file" | grep -oP '\d+\.\d+')
-          score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
+          score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file" || true)
           if [[ -n "$score" ]]; then
-            summary+="✅ Python $version: $score/10 🔗 [View Report]($artifact_url) *(file: \`pylint_output_$version.txt\`)*\n"
+            echo "✅ Python $version: $score/10 🔗 [View Report]($artifact_url) *(file: \`pylint_output_$version.txt\`)*" >> $GITHUB_OUTPUT
           else
-            summary+="⚠️ Python $version: No score found 🔗 [View Report]($artifact_url)\n"
+            echo "⚠️ Python $version: No score found 🔗 [View Report]($artifact_url)" >> $GITHUB_OUTPUT
           fi
         done
-        echo "summary<<EOF" >> $GITHUB_OUTPUT
-        echo "$summary" >> $GITHUB_OUTPUT
+    
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Comment on PR with Pylint Summary

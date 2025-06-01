@@ -38,7 +38,7 @@ jobs:
     - name: Upload all pylint reports
       uses: actions/upload-artifact@v4
       with:
-        name: pylint-reports
+        name: pylint-reports-${{ matrix.python-version }}
         path: pylint_output_${{ matrix.python-version }}.txt
 
   summarize:
@@ -49,11 +49,14 @@ jobs:
     
     steps:
     
-    - name: Download pylint reports
-      uses: actions/download-artifact@v4
-      with:
-        name: pylint-reports
-        path: reports
+    - name: Download all pylint reports
+      run: |
+        for version in 3.10 3.11 3.12 3.13; do
+          mkdir -p reports
+          gh run download --name "pylint-report-${version}" --dir reports || echo "Missing report for ${version}"
+        done
+      env:
+        GH_TOKEN: ${{ github.token }}
 
     - name: Generate Pylint Summary
       id: pylint-summary

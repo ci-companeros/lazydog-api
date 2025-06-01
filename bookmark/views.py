@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Bookmark
 from .serializers import BookmarkSerializer
-from .permissions import IsOwnerOrReadOnly
+from lazydog_api.permissions import IsOwnerOrReadOnly
 
 
 class BookmarkViewSet(viewsets.ModelViewSet):

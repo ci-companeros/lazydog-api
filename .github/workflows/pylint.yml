@@ -6,28 +6,76 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write  # Needed for posting PR comments
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
+
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pylint
         pip install -r requirements.txt
+
     - name: Run pylint and save output
       run: |
-        pylint $(git ls-files '*.py') | tee pylint_output.txt || true
-    - name: Upload pylint report
+        pylint $(git ls-files '*.py') | tee pylint_output_${{ matrix.python-version }}.txt || true
+
+    - name: Upload all pylint reports
       uses: actions/upload-artifact@v4
       with:
-        name: pylint-report
-        path: pylint_output.txt
+        name: pylint-reports
+        path: pylint_output_${{ matrix.python-version }}.txt
+
+  summarize:
+    name: Summarize and comment on PR
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+    - name: Download pylint reports
+      uses: actions/download-artifact@v4
+      with:
+        name: pylint-reports
+        path: reports
+
+    - name: Generate Pylint Summary
+      id: pylint-summary
+      run: |
+        summary="### 🐍 Pylint Scores by Python Version\n\n"
+        for file in reports/pylint_output_*.txt; do
+          version=$(echo "$file" | grep -oP '\d+\.\d+')
+          score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
+          if [[ -n "$score" ]]; then
+            summary+="✅ Python $version: $score/10 🔗 [View Report]($artifact_url) *(file: \`pylint_output_$version.txt\`)*\n"
+          else
+            summary+="⚠️ Python $version: No score found 🔗 [View Report]($artifact_url)\n"
+          fi
+        done
+        echo "summary<<EOF" >> $GITHUB_OUTPUT
+        echo "$summary" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Comment on PR with Pylint Summary
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        token: ${{ github.token }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: ${{ steps.pylint-summary.outputs.summary }}
+        comment-id: pylint-summary

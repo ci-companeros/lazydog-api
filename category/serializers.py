@@ -13,14 +13,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def validate_name(self, value):
         """
-        Validate the name field, except for the current instance.
+        Ensure category names are unique (case-insensitive) except for the current instance.
+        Normalize the name to title case.
         """
+        normalized_value = value.strip().title()
         instance = getattr(self, "instance", None)
 
-        if instance is None or instance.name != value:
-            if Category.objects.filter(name=value).exists():
-                raise serializers.ValidationError(
-                    "A category with this name already exists."
-                )
+        qs = Category.objects.filter(name__iexact=normalized_value)
+        if instance is not None:
+            qs = qs.exclude(pk=instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("A category with this name already exists.")
 
-        return value
+        return normalized_value

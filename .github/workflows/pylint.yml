@@ -58,6 +58,9 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
 
+    - name: List downloaded pylint reports
+      run: ls -lh reports || echo "No reports directory"
+
     - name: Generate Pylint Summary
       id: pylint-summary
       run: |
@@ -66,9 +69,9 @@ jobs:
           version=$(echo "$file" | grep -oP '\d+\.\d+')
           score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
           if [[ -n "$score" ]]; then
-            summary+="✅ Python $version: $score/10 🔗 [View Report]($artifact_url) *(file: \`pylint_output_$version.txt\`)*\n"
+            summary+="✅ Python $version: $score/10 *(file: \`pylint_output_$version.txt\`)*\n"
           else
-            summary+="⚠️ Python $version: No score found 🔗 [View Report]($artifact_url)\n"
+            summary+="⚠️ Python $version: No score found\n"
           fi
         done
         echo "summary<<EOF" >> $GITHUB_OUTPUT

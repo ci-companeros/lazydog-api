@@ -1,19 +1,7 @@
 from rest_framework import viewsets, permissions
 from .models import Tag
 from .serializers import TagSerializer
-
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission:
-    - Read access for everyone.
-    - Only admins and superusers can create, update, and delete tags.
-    """
-
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True  # Allow read access
-        return request.user and request.user.is_staff  # Only admins can modify
+from lazydog_api.permissions import AdminOnly
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -26,4 +14,4 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [AdminOnly]

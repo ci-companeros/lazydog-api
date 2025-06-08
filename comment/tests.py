@@ -26,14 +26,6 @@ class CommentAPITestCase(APITestCase):
             resource_item=cls.resource_item,
             content="Test Comment",
 
-@property
-def id(self):
-    raise NotImplementedError
-
-@id.setter
-def id(self, value):
-    raise NotImplementedError
-
 
         )
         cls.url = reverse("comment-list")

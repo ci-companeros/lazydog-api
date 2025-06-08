@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters, permissions
+from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import ResourceItem
 from .serializers import ResourceItemSerializer
@@ -7,7 +7,8 @@ from lazydog_api.permissions import IsOwnerOrReadOnly
 
 class ResourceItemViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows resource items to be viewed, created, edited, or deleted.
+    API endpoint that allows resource items to be viewed, created,
+    edited, or deleted.
 
     Filtering:
     - Filter by category and tags

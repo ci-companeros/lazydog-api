@@ -53,6 +53,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download all pylint reports
         run: |
           for version in 3.10 3.11 3.12 3.13; do

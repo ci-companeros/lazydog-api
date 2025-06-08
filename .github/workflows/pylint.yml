@@ -56,6 +56,13 @@ jobs:
           done
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Move pylint files up one level
+        run: |
+          for d in reports/pylint-reports-*; do
+            if [ -d "$d" ]; then
+              mv "$d"/* reports/
+            fi
+          done
 
       # --- DEBUG:
       - name: List files in reports directory

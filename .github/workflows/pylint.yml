@@ -64,6 +64,7 @@ jobs:
     - name: Generate Pylint Summary
       id: pylint-summary
       run: |
+        set +e
         summary="### 🐍 Pylint Scores by Python Version\n\n"
         for file in reports/pylint_output_*.txt; do
           version=$(echo "$file" | grep -oP '\d+\.\d+')

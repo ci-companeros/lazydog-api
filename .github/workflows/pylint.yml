@@ -46,14 +46,14 @@ jobs:
     needs: build
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    
+
     steps:
-    
+
     - name: Download all pylint reports
       run: |
         for version in 3.10 3.11 3.12 3.13; do
           mkdir -p reports
-          gh run download --name "pylint-report-${version}" --dir reports || echo "Missing report for ${version}"
+          gh run download --name "pylint-reports-${version}" --dir reports || echo "Missing report for ${version}"
         done
       env:
         GH_TOKEN: ${{ github.token }}

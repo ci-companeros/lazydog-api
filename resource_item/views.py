@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import ResourceItem
 from .serializers import ResourceItemSerializer
-from lazydog_api.permissions import IsOwnerOrReadOnly
+from lazydog_api.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class ResourceItemViewSet(viewsets.ModelViewSet):
@@ -23,7 +23,7 @@ class ResourceItemViewSet(viewsets.ModelViewSet):
 
     serializer_class = ResourceItemSerializer
     queryset = ResourceItem.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrAdminOrReadOnly]
 
     filter_backends = [
         DjangoFilterBackend,

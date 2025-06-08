@@ -62,7 +62,7 @@ def id(self, value):
 
     def test_create_comment_missing_content(self):
         self.client.login(username="testuser1", password="testpassword")
-        data = {"resource_item": self.resource_item.id} 
+        data = {"resource_item": self.resource_item.id}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("content", response.data)

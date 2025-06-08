@@ -37,10 +37,11 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('categories/', include('category.urls')),
-    path('comments/', include('comment.urls')),
-    path('ratings/', include('rating.urls')),
-    path('resources/', include('resource_item.urls')),
-    path('tags/', include('tag.urls')),
-    path('bookmark/', include('bookmark.urls')),
+    path('api/v1/categories/', include('category.urls')),
+    path('api/v1/comments/', include('comment.urls')),
+    path('api/v1/flags/', include('flag.urls')),
+    path('api/v1/ratings/', include('rating.urls')),
+    path('api/v1/resources/', include('resource_item.urls')),
+    path('api/v1/tags/', include('tag.urls')),
+    path('api/v1/bookmark/', include('bookmark.urls')),
 ]

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, filters
 from .models import Category
 from .serializers import CategorySerializer
-from .permissions import AdminOnly
+from lazydog_api.permissions import AdminOnly
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -12,15 +12,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [AdminOnly]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['created_at', 'name']
     search_fields = ['name', 'description']
 
-    def get_permissions(self):
-        """
-        Allow read-only access for all users,
-        but restrict modifications to admins.
-        """
-        if self.action in ['list', 'retrieve']:
-            return [permissions.AllowAny()]
-        return [AdminOnly()]

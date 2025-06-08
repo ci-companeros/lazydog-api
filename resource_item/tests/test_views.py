@@ -46,12 +46,14 @@ class TestResourceItemAPI(APITestCase):
             description="First item",
             user=cls.owner,
             category=cls.category_music,
+            url="https://example.com/item1"
         )
         cls.item2 = ResourceItem.objects.create(
             title="Item Two",
             description="Second item",
             user=cls.owner,
             category=cls.category_book,
+            url="https://example.com/item2"
         )
         # URLs
         cls.list_url = reverse("resourceitem-list")
@@ -77,7 +79,7 @@ class TestResourceItemAPI(APITestCase):
             "title": "Anon Create",
             "description": "Should not work at all",
             "category": self.category_music.pk,
-            "url": "https://example.com"
+            "url": "https://example.com/anon-test"
         })
         self.assertIn(response.status_code, [
                       status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN])
@@ -89,7 +91,7 @@ class TestResourceItemAPI(APITestCase):
             "title": "Created By Owner",
             "description": "Test description to test this",
             "category": self.category_music.pk,
-            "url": "https://example.com"
+            "url": "https://example.com/create-test"
         })
         print("RESPONSE DATA (as_authenticated):", response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -102,7 +104,7 @@ class TestResourceItemAPI(APITestCase):
             "title": "Admin Created",
             "description": "By admin is this made",
             "category": self.category_book.pk,
-            "url": "https://example.com"
+            "url": "https://example.com/admin-test"
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["title"], "Admin Created")
@@ -116,7 +118,7 @@ class TestResourceItemAPI(APITestCase):
             "title": "Missing Category",
             "description": "Should fail oh yes",
             # No category provided
-            "url": "https://example.com"
+            "url": "https://example.com/no-category-test"
         })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("category", response.data)
@@ -196,7 +198,7 @@ class TestResourceItemAPI(APITestCase):
             "title": "",
             "description": "",
             "category": self.category_music.pk,
-            "url": "https://example.com"
+            "url": "https://example.com/invalid-test"
         })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 

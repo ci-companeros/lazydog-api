@@ -25,6 +25,16 @@ class CommentAPITestCase(APITestCase):
             user=cls.user_1,
             resource_item=cls.resource_item,
             content="Test Comment",
+
+@property
+def id(self):
+    raise NotImplementedError
+
+@id.setter
+def id(self, value):
+    raise NotImplementedError
+
+
         )
         cls.url = reverse("comment-list")
         cls.url_detail = reverse("comment-detail", args=[cls.comment.id])
@@ -52,7 +62,7 @@ class CommentAPITestCase(APITestCase):
 
     def test_create_comment_missing_content(self):
         self.client.login(username="testuser1", password="testpassword")
-        data = {"resource_item": self.resource_item.id}
+        data = {"resource_item": self.resource_item.id} 
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("content", response.data)

@@ -19,6 +19,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0   # Lägg till detta
+
+    - name: Debug git files
+      run: git ls-files '*.py'  # Kontrollera git-filer listas utan fel
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
@@ -46,39 +51,59 @@ jobs:
     needs: build
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    
+
     steps:
-    
-    - name: Download all pylint reports
-      run: |
-        for version in 3.10 3.11 3.12 3.13; do
-          mkdir -p reports
-          gh run download --name "pylint-report-${version}" --dir reports || echo "Missing report for ${version}"
-        done
-      env:
-        GH_TOKEN: ${{ github.token }}
+      - uses: actions/checkout@v4
 
-    - name: Generate Pylint Summary
-      id: pylint-summary
-      run: |
-        summary="### 🐍 Pylint Scores by Python Version\n\n"
-        for file in reports/pylint_output_*.txt; do
-          version=$(echo "$file" | grep -oP '\d+\.\d+')
-          score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
-          if [[ -n "$score" ]]; then
-            summary+="✅ Python $version: $score/10 🔗 [View Report]($artifact_url) *(file: \`pylint_output_$version.txt\`)*\n"
-          else
-            summary+="⚠️ Python $version: No score found 🔗 [View Report]($artifact_url)\n"
-          fi
-        done
-        echo "summary<<EOF" >> $GITHUB_OUTPUT
-        echo "$summary" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+      - name: Download all pylint reports
+        run: |
+          for version in 3.10 3.11 3.12 3.13; do
+            mkdir -p reports
+            gh run download --name "pylint-reports-${version}" --dir reports || echo "Missing report for ${version}"
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Move pylint files up one level
+        run: |
+          for d in reports/pylint-reports-*; do
+            if [ -d "$d" ]; then
+              mv "$d"/* reports/
+            fi
+          done
 
-    - name: Comment on PR with Pylint Summary
-      uses: peter-evans/create-or-update-comment@v4
-      with:
-        token: ${{ github.token }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: ${{ steps.pylint-summary.outputs.summary }}
-        comment-id: pylint-summary
+      # --- DEBUG:
+      - name: List files in reports directory
+        run: ls -lh reports || echo "No reports directory"
+
+      - name: Print contents of all pylint reports (debug)
+        run: |
+          for file in reports/pylint_output_*.txt; do
+            echo "--- $file ---"
+            cat "$file"
+            echo ""
+          done
+
+      - name: Generate Pylint Summary
+        id: pylint-summary
+        run: |
+          summary="### 🐍 Pylint Scores by Python Version\n\n"
+          for file in reports/pylint_output_*.txt; do
+            version=$(echo "$file" | grep -oP '\d+\.\d+')
+            score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
+            if [[ -n "$score" ]]; then
+              summary+="✅ Python $version: $score/10 *(file: \`pylint_output_$version.txt\`)*\n"
+            else
+              summary+="⚠️ Python $version: No score found\n"
+            fi
+          done
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$summary" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT || true
+
+      - name: Comment on PR with Pylint Summary
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ github.token }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.pylint-summary.outputs.summary }}
+          comment-id: pylint-summary

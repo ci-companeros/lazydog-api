@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import Tag
 from .serializers import TagSerializer
 from lazydog_api.permissions import AdminOnly

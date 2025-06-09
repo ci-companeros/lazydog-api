@@ -33,7 +33,7 @@ class BookmarkViewTest(TestCase):
         cls.resource1 = ResourceItem.objects.create(
             title="Resource 1", user=cls.testuser2
         )
-        
+
         cls.resource2 = ResourceItem.objects.create(
             title="Resource 2", user=cls.testuser1
         )
@@ -43,7 +43,10 @@ class BookmarkViewTest(TestCase):
         )
 
         cls.list_url = reverse("bookmark-list")
-        cls.detail_url = reverse("bookmark-detail", args=[cls.bookmark.id])  # type: ignore[attr-defined] 
+        cls.detail_url = reverse(
+            "bookmark-detail",
+            args=[cls.bookmark.id]  # type: ignore[attr-defined]
+        )
 
     # GET
     def test_list_bookmarks_authenticated(self):
@@ -54,25 +57,33 @@ class BookmarkViewTest(TestCase):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)  # type: ignore[attr-defined]
-        self.assertEqual(response.data[0]["user"], self.testuser1.id)  # type: ignore[attr-defined]
-    
+        self.assertEqual(
+            response.data[0]["user"],  # type: ignore[attr-defined]
+            self.testuser1.id  # type: ignore[attr-defined]
+        )
+
     def test_retrieve_single_bookmark(self):
         """
-        Authenticated users should be able to retrieve a specific bookmark by ID.
+        Authenticated users should be able to retrieve a specific bookmark
+        by ID.
         """
         self.client.login(username="testuser1", password="testpassword")
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["id"], self.bookmark.id)  # type: ignore[attr-defined]
-    
+        self.assertEqual(
+            response.data["id"],  # type: ignore[attr-defined]
+            self.bookmark.id  # type: ignore[attr-defined]
+        )
+
     def test_retrieve_bookmark_unauthenticated(self):
         """
-        Unauthenticated users should not be able to retrieve a specific bookmark.
+        Unauthenticated users should not be able to retrieve a
+        specific bookmark.
         """
         self.client.logout()
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_retrieve_bookmark_by_non_owner(self):
         """
         Non-owners should not be able to retrieve bookmarks they do not own.
@@ -80,34 +91,52 @@ class BookmarkViewTest(TestCase):
         self.client.login(username="testuser2", password="testpassword")
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
+
     # POST
     def test_create_bookmark_authenticated(self):
         """
         Authenticated users should be able to create a new bookmark.
         """
         self.client.login(username="testuser2", password="testpassword")
-        response = self.client.post(self.list_url, {"resource": self.resource2.id})  # type: ignore[attr-defined]
+        response = self.client.post(
+            self.list_url,
+            {"resource": self.resource2.id}  # type: ignore[attr-defined]
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["user"], self.testuser2.id)  # type: ignore[attr-defined]
-        self.assertEqual(response.data["resource"], self.resource2.id)  # type: ignore[attr-defined]
-    
+        self.assertEqual(
+            response.data["user"],  # type: ignore[attr-defined]
+            self.testuser2.id  # type: ignore[attr-defined]
+        )
+        self.assertEqual(
+            response.data["resource"],  # type: ignore[attr-defined]
+            self.resource2.id  # type: ignore[attr-defined]
+        )
+
     def test_create_bookmark_unauthenticated(self):
         """
         Unauthenticated users should not be able to create bookmarks.
         """
         self.client.logout()
-        response = self.client.post(self.list_url, {"resource": self.resource2.id})  # type: ignore[attr-defined]
+        response = self.client.post(
+            self.list_url,
+            {"resource": self.resource2.id}  # type: ignore[attr-defined]
+        )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        
+
     def test_prevent_duplicate_bookmark_api(self):
         """
         API should prevent a user from bookmarking the same resource twice.
         """
         self.client.login(username="testuser1", password="testpassword")
-        response = self.client.post(self.list_url, {"resource": self.resource1.id})  # type: ignore[attr-defined]
+        response = self.client.post(
+            self.list_url,
+            {"resource": self.resource1.id}  # type: ignore[attr-defined]
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("already bookmarked", str(response.data))  # type: ignore[attr-defined]
+        self.assertIn(
+            "already bookmarked",
+            str(response.data)  # type: ignore[attr-defined]
+        )
 
     # DELETE
     def test_delete_bookmark_by_owner(self):
@@ -117,7 +146,9 @@ class BookmarkViewTest(TestCase):
         self.client.login(username="testuser1", password="testpassword")
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Bookmark.objects.filter(id=self.bookmark.id).exists())  # type: ignore[attr-defined]
+        self.assertFalse(
+            Bookmark.objects.filter(id=self.bookmark.id).exists()  # type: ignore[attr-defined]
+        )
 
     def test_delete_bookmark_by_non_owner(self):
         """
@@ -126,7 +157,9 @@ class BookmarkViewTest(TestCase):
         self.client.login(username="testuser2", password="testpassword")
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertTrue(Bookmark.objects.filter(id=self.bookmark.id).exists())  # type: ignore[attr-defined]
+        self.assertTrue(
+            Bookmark.objects.filter(id=self.bookmark.id).exists()  # type: ignore[attr-defined]
+        )
 
     def test_delete_bookmark_unauthenticated(self):
         """
@@ -134,4 +167,6 @@ class BookmarkViewTest(TestCase):
         """
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue(Bookmark.objects.filter(id=self.bookmark.id).exists())  # type: ignore[attr-defined]
+        self.assertTrue(
+            Bookmark.objects.filter(id=self.bookmark.id).exists()  # type: ignore[attr-defined]
+        )

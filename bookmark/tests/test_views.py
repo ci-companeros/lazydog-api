@@ -165,6 +165,7 @@ class BookmarkViewTest(TestCase):
         """
         Unauthenticated users should not be able to delete any bookmarks.
         """
+        self.client.logout() 
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(

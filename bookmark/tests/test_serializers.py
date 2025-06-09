@@ -82,3 +82,29 @@ class BookmarkSerializerTest(TestCase):
         with self.assertRaises(ValidationError) as ctx:
             serializer.is_valid(raise_exception=True)
         self.assertIn("already bookmarked", str(ctx.exception))
+
+    def test_missing_resource_field_should_fail(self):
+        """
+        Serializer should raise error if 'resource' field is missing
+        """
+        request = self.factory.post("/")
+        request.user = self.testuser1
+        serializer = BookmarkSerializer(
+            data={},
+            context={"request": request}
+        )
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("resource", serializer.errors)
+
+    def test_invalid_resource_id_should_fail(self):
+        """
+        Serializer should raise error for nonexistent resource ID
+        """
+        request = self.factory.post("/")
+        request.user = self.testuser1
+        serializer = BookmarkSerializer(
+            data={"resource": 9999},  # unlikely to exist
+            context={"request": request}
+        )
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("resource", serializer.errors)

@@ -29,11 +29,15 @@ class BookmarkSerializerTest(TestCase):
         )
 
         cls.resource1 = ResourceItem.objects.create(
-            title="Resource 1", user=cls.testuser2
+            title="Resource 1",
+            user=cls.testuser2,
+            url="https://example.com/serializer-1"
         )
 
         cls.resource2 = ResourceItem.objects.create(
-            title="Resource 2", user=cls.testuser1
+            title="Resource 2",
+            user=cls.testuser1,
+            url="https://example.com/serializer-2"
         )
 
         # Existing bookmark for duplicate test

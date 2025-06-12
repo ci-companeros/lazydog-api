@@ -29,10 +29,14 @@ class BookmarkModelTest(TestCase):
         )
 
         cls.resource1 = ResourceItem.objects.create(
-            title="Test Resource 1", user=cls.testuser1
+            title="Test Resource 1",
+            user=cls.testuser1,
+            url="https://example.com/resource-1"
         )
         cls.resource2 = ResourceItem.objects.create(
-            title="Test Resource 2", user=cls.testuser2
+            title="Test Resource 2",
+            user=cls.testuser2,
+            url="https://example.com/resource-2"
         )
 
         cls.bookmark1 = Bookmark.objects.create(

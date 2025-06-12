@@ -8,7 +8,7 @@ Provides standard CRUD operations through DRF's DefaultRouter.
 """
 
 router = DefaultRouter()
-router.register(r'', BookmarkViewSet)
+router.register(r'bookmarks', BookmarkViewSet, basename='bookmark')
 
 urlpatterns = [
     path('', include(router.urls)),

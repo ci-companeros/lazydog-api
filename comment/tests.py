@@ -25,6 +25,8 @@ class CommentAPITestCase(APITestCase):
             user=cls.user_1,
             resource_item=cls.resource_item,
             content="Test Comment",
+
+
         )
         cls.url = reverse("comment-list")
         cls.url_detail = reverse("comment-detail", args=[cls.comment.id])

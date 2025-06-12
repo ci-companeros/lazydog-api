@@ -17,10 +17,14 @@ class BookmarkAPITestCase(APITestCase):
             username="testuser2", password="testpassword"
         )
         cls.resource = ResourceItem.objects.create(
-            title="Test Resource", user=cls.user_1
+            title="Test Resource",
+            user=cls.user_1,
+            url="https://example.com/resource1"
         )
         cls.resource2 = ResourceItem.objects.create(
-            title="Another Resource", user=cls.user_2
+            title="Another Resource",
+            user=cls.user_2,
+            url="https://example.com/resource2"
         )
         cls.bookmark = Bookmark.objects.create(
             user=cls.user_1, resource=cls.resource

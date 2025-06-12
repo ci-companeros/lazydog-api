@@ -11,7 +11,7 @@ class ResourceItemSerializer(serializers.ModelSerializer):
     """
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
-        required=False,
+        required=True,
         allow_null=True
     )
 

@@ -124,7 +124,7 @@ elif os.getenv("GITHUB_WORKFLOW"):  # Detect if running in GitHub Actions
     }
 else:  # Use PostgreSQL in production
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
     }
 
 

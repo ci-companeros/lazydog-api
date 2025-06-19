@@ -1,22 +1,21 @@
 from django.contrib import admin
-from .models import ResourceItem
+from .models import Rating
 
 """
 Admin configuration for the Rating model.
 
 Enables searching, filtering, and display of ratings in the Django admin panel.
-Automatically keeps resource average ratings and rating counts in sync via signals,
+Automatically keeps resource average ratings and
+rating counts in sync via signals,
 so administrators always see up-to-date rating statistics.
 """
 
 
-@admin.register(ResourceItem)
-class ResourceItemAdmin(admin.ModelAdmin):
-    list_display = (
-        'title', 'user', 'average_rating', 'rating_count', 'created_at'
-    )
-    readonly_fields = ('average_rating', 'rating_count')
-    search_fields = ('title', 'user__username')
-    list_filter = ('category', 'created_at')
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('user', 'resource_item', 'score', 'created_at')
+    search_fields = ('user__username', 'resource_item__title')
+    list_filter = ('score', 'created_at')
     ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'created_at'

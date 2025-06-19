@@ -40,8 +40,12 @@ REST_FRAMEWORK = {
 
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
+     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -63,6 +67,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 
     'resource_item',
     'comment',
@@ -124,7 +129,7 @@ elif os.getenv("GITHUB_WORKFLOW"):  # Detect if running in GitHub Actions
     }
 else:  # Use PostgreSQL in production
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL", ""))
     }
 
 
@@ -152,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Europe/Stockholm"
 
 USE_I18N = True
 

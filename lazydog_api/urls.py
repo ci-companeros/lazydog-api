@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -44,4 +45,5 @@ urlpatterns = [
     path('api/v1/resources/', include('resource_item.urls')),
     path('api/v1/tags/', include('tag.urls')),
     path('api/v1/bookmark/', include('bookmark.urls')),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]

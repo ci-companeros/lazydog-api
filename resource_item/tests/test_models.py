@@ -76,7 +76,7 @@ class ResourceItemModelTest(TestCase):
             url="https://unique.com"
         )
         with self.assertRaises(IntegrityError):
-            with transaction.atomic():  
+            with transaction.atomic():
                 ResourceItem.objects.create(
                     title="HTML2",
                     description="desc2",

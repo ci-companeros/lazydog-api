@@ -124,7 +124,7 @@ class ResourceItemSerializerTest(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn("title", serializer.errors)
         self.assertIn("already have a resource"
-                      "with this title", serializer.errors["title"][0])
+                      " with this title", serializer.errors["title"][0])
 
     def test_duplicate_title_for_other_user_ok(self):
         """Should allow same title for different users."""

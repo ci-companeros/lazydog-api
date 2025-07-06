@@ -36,7 +36,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        'rest_framework.authentication.SessionAuthentication',
+
     ],
 
     'DEFAULT_FILTER_BACKENDS': [
@@ -44,6 +44,7 @@ REST_FRAMEWORK = {
      ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 

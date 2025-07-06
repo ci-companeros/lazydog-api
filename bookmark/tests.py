@@ -64,7 +64,7 @@ class BookmarkAPITestCase(APITestCase):
         """Ensure unauthenticated user cannot create a bookmark"""
         data = {"resource": self.resource.id}
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_bookmark_by_owner(self):
         """Ensure bookmark can be deleted by its owner"""
@@ -82,7 +82,10 @@ class BookmarkAPITestCase(APITestCase):
         )
         self.assertTrue(logged_in, msg="Login failed for testuser2")
         response = self.client.delete(self.url_detail)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN
+        )
 
     def test_list_bookmarks(self):
         """Ensure bookmarks can be listed without authentication"""

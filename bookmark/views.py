@@ -25,9 +25,20 @@ class BookmarkViewSet(viewsets.ModelViewSet):
     # Allow filtering by user or resource
     ordering_fields = ['created_at']
     ordering = ['-created_at']  # Default ordering by creation date
+    
+    def get_queryset(self):
+        """
+        Return only the bookmarks belonging to the currently authenticated 
+        user. Prevents users from seeing others' bookmarks.
+        """
+        user = self.request.user
+        if user.is_authenticated:
+            return Bookmark.objects.filter(user=user)
+        return Bookmark.objects.none()
 
     def perform_create(self, serializer):
         """
-        Ensure the user is set from the request.
+        Automatically assign the logged-in user as the owner when creating a bookmark.
+        Prevents spoofing another user in the POST payload.
         """
         serializer.save(user=self.request.user)

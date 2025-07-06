@@ -62,20 +62,21 @@ jobs:
           set +e  # disable exit on error for this step
 
           summary="### 🐍 Pylint Scores by Python Version\n\n"
-          for file in reports/pylint_output_*.txt; do
-            version=$(echo "$file" | grep -oP '\d+\.\d+')
-            if [[ ! -f "$file" ]]; then
-              summary+="⚠️ Python $version: No report file found\n"
-              continue
-            fi
-
-            score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
-            if [[ -n "$score" ]]; then
-              summary+="✅ Python $version: $score/10 *(file: \`pylint_output_$version.txt\`)*\n"
-            else
-              summary+="⚠️ Python $version: No score found\n"
-            fi
-          done
+          shopt -s nullglob
+          files=(reports/pylint_output_*.txt)
+          if (( ${#files[@]} == 0 )); then
+            summary+="⚠️ No Pylint report files found for any Python version\n"
+          else
+            for file in "${files[@]}"; do
+              version=$(echo "$file" | grep -oP '\d+\.\d+')
+              score=$(grep -oP 'rated at \K[0-9.]+(?=/10)' "$file")
+              if [[ -n "$score" ]]; then
+                summary+="✅ Python $version: $score/10 *(file: \`pylint_output_$version.txt\`)*\n"
+              else
+                summary+="⚠️ Python $version: No score found\n"
+              fi
+            done
+          fi
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$summary" >> $GITHUB_OUTPUT
@@ -84,6 +85,9 @@ jobs:
       - name: Comment on PR with Pylint Summary
         uses: peter-evans/create-or-update-comment@v4
         with:
+          token: ${{ github.token }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.pylint-summary.outputs.summary }}
           token: ${{ github.token }}
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.pylint-summary.outputs.summary }}

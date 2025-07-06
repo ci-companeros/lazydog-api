@@ -28,7 +28,7 @@ class ResourceItemSerializer(serializers.ModelSerializer):
         model = ResourceItem
         fields = ['id', 'title', 'description',
                   'category', 'tags', 'user', 'url',
-                  'created_at', 'updated_at']
+                  'created_at', 'updated_at', 'average_rating', 'rating_count']
         read_only_fields = ['user', 'created_at', 'updated_at']
 
     def validate_title(self, value):

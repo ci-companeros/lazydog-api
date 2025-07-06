@@ -76,7 +76,7 @@ class CommentAPITestCase(APITestCase):
     def test_create_comment_not_authenticated(self):
         data = {"content": "New Comment", "resource_item": self.resource_item.id}
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Comment.objects.count(), 1)
 
     def test_edit_comment_by_author(self):
@@ -98,7 +98,7 @@ class CommentAPITestCase(APITestCase):
     def test_edit_comment_by_unauthenticated(self):
         data = {"content": "Updated Comment"}
         response = self.client.patch(self.url_detail, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.comment.refresh_from_db()
         self.assertEqual(self.comment.content, "Test Comment")
 
@@ -133,7 +133,7 @@ class CommentAPITestCase(APITestCase):
 
     def test_delete_comment_by_unauthenticated(self):
         response = self.client.delete(self.url_detail)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Comment.objects.count(), 1)
 
     def test_list_comments(self):

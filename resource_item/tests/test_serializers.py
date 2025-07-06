@@ -1,7 +1,8 @@
 """
 Unit tests for the ResourceItemSerializer.
 
-This suite validates custom field validation and constraints for the ResourceItemSerializer.
+This suite validates custom field validation and
+constraints for the ResourceItemSerializer.
 Covers:
 - Min/max length for description
 - Valid/invalid URL
@@ -25,7 +26,8 @@ class ResourceItemSerializerTest(TestCase):
     def setUpTestData(cls):
         """Set up users, category, and tag for tests."""
         cls.user = User.objects.create_user(username="testuser", password="pw")
-        cls.other_user = User.objects.create_user(username="other", password="pw")
+        cls.other_user = User.objects.create_user(username="other",
+                                                  password="pw")
         cls.category_html = Category.objects.create(name="HTML")
         cls.tag_python = Tag.objects.create(name="python")
 
@@ -64,7 +66,8 @@ class ResourceItemSerializerTest(TestCase):
         )
         self.assertFalse(serializer.is_valid())
         self.assertIn("description", serializer.errors)
-        self.assertIn("at least 10 characters", serializer.errors["description"][0])
+        self.assertIn("at least 10 characters",
+                      serializer.errors["description"][0])
 
     def test_description_too_long(self):
         """Should error if description is too long."""
@@ -99,7 +102,8 @@ class ResourceItemSerializerTest(TestCase):
         self.assertIn("Enter a valid URL", serializer.errors["url"][0])
 
     def test_duplicate_title_for_same_user(self):
-        """Should error if same user tries to create resource with same title."""
+        """Should error if same user tries to create
+        resource with same title."""
         ResourceItem.objects.create(
             title="Duplicate",
             description="Desc",
@@ -119,7 +123,8 @@ class ResourceItemSerializerTest(TestCase):
         )
         self.assertFalse(serializer.is_valid())
         self.assertIn("title", serializer.errors)
-        self.assertIn("already have a resource with this title", serializer.errors["title"][0])
+        self.assertIn("already have a resource"
+                      " with this title", serializer.errors["title"][0])
 
     def test_duplicate_title_for_other_user_ok(self):
         """Should allow same title for different users."""

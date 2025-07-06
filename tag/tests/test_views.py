@@ -61,10 +61,10 @@ class TagAPITestCase(APITestCase):
     def test_create_tag_unauthenticated(self):
         """
         Ensure unauthenticated users cannot create tags.
-        Tests POST /tags/ without login and expects HTTP 403 Forbidden.
+        Tests POST /tags/ without login and expects HTTP 401 Unauthorized.
         """
         response = self.client.post(self.url, {"name": "unauth"})
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_tag_as_regular_user_forbidden(self):
         """

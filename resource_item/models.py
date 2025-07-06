@@ -64,18 +64,30 @@ class ResourceItem(models.Model):
         related_name="resources",
         help_text="Optional. One or more tags for this resource."
     )
+    average_rating = models.FloatField(
+        default=0.0,
+        help_text=(
+            "Average rating of this resource, calculated from user ratings."
+        )
+    )
+    rating_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of ratings this resource has received."
+    )
 
     def clean(self):
         """
         Custom validation for the ResourceItem model.
         """
         super().clean()
-        
+
         # Enforce description max length constraint
         if self.description and len(self.description) > 500:
             raise ValidationError({
-                'description': 'Ensure this value has at most 500 characters '
-                              f'(it has {len(self.description)}).'
+                'description': (
+                    'Ensure this value has at most 500 characters '
+                    f'(it has {len(self.description)}).'
+                )
             })
 
     def __str__(self):

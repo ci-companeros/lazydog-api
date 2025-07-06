@@ -125,7 +125,7 @@ class BookmarkViewTest(TestCase):
             self.list_url,
             {"resource": self.resource2.id}  # type: ignore[attr-defined]
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_prevent_duplicate_bookmark_api(self):
         """
@@ -169,9 +169,9 @@ class BookmarkViewTest(TestCase):
         """
         Unauthenticated users should not be able to delete any bookmarks.
         """
-        self.client.logout() 
+        self.client.logout()
         response = self.client.delete(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertTrue(
             Bookmark.objects.filter(id=self.bookmark.id).exists()  # type: ignore[attr-defined]
         )

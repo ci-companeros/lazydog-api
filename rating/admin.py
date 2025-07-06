@@ -1,6 +1,15 @@
 from django.contrib import admin
 from .models import Rating
 
+"""
+Admin configuration for the Rating model.
+
+Enables searching, filtering, and display of ratings in the Django admin panel.
+Automatically keeps resource average ratings and
+rating counts in sync via signals,
+so administrators always see up-to-date rating statistics.
+"""
+
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
